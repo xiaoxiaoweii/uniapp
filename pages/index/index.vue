@@ -47,7 +47,7 @@
 		</view>
 		<!-- 创建按钮 -->
 		<view class="create-todo" @click="create">
-			<text class="iconfont icon-plus-line"></text>
+			<text class="iconfont icon-plus-line" :class="{'create-todo-active':textShow}"></text>
 		</view>
 		<!-- 弹出框 -->
 		<view v-if="active" class="create-content">
@@ -74,7 +74,8 @@
 				// 控制是否显示
 				active: false,
 				activeIndex: 0,
-				text: '全部'
+				text: '全部',
+				textShow: false
 			}
 		},
 		computed: {
@@ -119,8 +120,30 @@
 		methods: {
 			// 打开输入框
 			create() {
+				if(this.active){
+					this.close()
+				}else{
+					this.open()
+				}
+			},
+			// 打开动画
+			open() {
 				// 显示输入框
 				this.active = true
+				this.$nextTick(()=>{
+					setTimeout(()=>{
+						this.textShow = true
+					},50)
+				})
+			},
+			// 关闭动画
+			close() {
+				this.textShow = false
+				this.$nextTick(()=>{
+					setTimeout(()=>{
+						this.active = false
+					},350)
+				})
 			},
 			// 添加待办事项
 			add() {
@@ -144,6 +167,7 @@
 				this.value = ''
 				// 将输入框隐藏
 				this.active = false
+				this.close()
 			},
 			// 点击列表触发
 			finish(id) {
@@ -164,14 +188,20 @@
 	@import '../../common/icon.css';
 
 	.todo-header {
+		position: fixed;
+		top: 0;
+		left: 0;
 		display: flex;
 		align-items: center;
 		padding: 0 15px;
 		font-size: 12px;
 		color: #333333;
+		width: 100%;
 		height: 45px;
+		box-sizing: border-box;
 		box-shadow: -1px 1px 5px 0 rgb(0, 0, 0, 0.1);
 		background-color: #FFFFFF;
+		z-index: 10;
 	}
 
 	.todo-header_left {
@@ -199,6 +229,8 @@
 
 	.todo-content {
 		position: relative;
+		padding-top: 55px;
+		padding-bottom: 100px;
 	}
 
 	.todo-list {
@@ -379,5 +411,11 @@
 		text-align: center;
 		font-size: 14px;
 		color: #cccccc;
+	}
+	.icon-plus-line {
+		transition: transform 0.3s;
+	}
+	.create-todo-active {
+		transform: rotate(135deg);
 	}
 </style>

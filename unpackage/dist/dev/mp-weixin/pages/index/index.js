@@ -216,7 +216,8 @@ var _default =
       // 控制是否显示
       active: false,
       activeIndex: 0,
-      text: '全部' };
+      text: '全部',
+      textShow: false };
 
   },
   computed: {
@@ -261,8 +262,30 @@ var _default =
   methods: {
     // 打开输入框
     create: function create() {
+      if (this.active) {
+        this.close();
+      } else {
+        this.open();
+      }
+    },
+    // 打开动画
+    open: function open() {var _this = this;
       // 显示输入框
       this.active = true;
+      this.$nextTick(function () {
+        setTimeout(function () {
+          _this.textShow = true;
+        }, 50);
+      });
+    },
+    // 关闭动画
+    close: function close() {var _this2 = this;
+      this.textShow = false;
+      this.$nextTick(function () {
+        setTimeout(function () {
+          _this2.active = false;
+        }, 350);
+      });
     },
     // 添加待办事项
     add: function add() {
@@ -286,6 +309,7 @@ var _default =
       this.value = '';
       // 将输入框隐藏
       this.active = false;
+      this.close();
     },
     // 点击列表触发
     finish: function finish(id) {
